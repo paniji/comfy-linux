@@ -1,0 +1,73 @@
+Connecting to Cloudflare...
+Loaded plugins: dkms-build-requires, extras_suggestions, kernel-livepatch, langpacks, priorities, update-motd, versionlock
+Cannot open: https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.rpm. Skipping.
+Error: Nothing to do
+## ComfyUI-Manager: installing dependencies done.
+** ComfyUI startup time: 2024-05-11 21:20:56.408787
+** Platform: Linux
+** Python version: 3.10.9 | packaged by conda-forge | (main, Feb  2 2023, 20:20:04) [GCC 11.3.0]
+** Python executable: /opt/conda/bin/python
+** Log path: /root/AI/ComfyUI/comfyui.log
+
+Prestartup times for custom nodes:
+   1.1 seconds: /root/AI/ComfyUI/custom_nodes/ComfyUI-Manager
+
+Total VRAM 14931 MB, total RAM 15692 MB
+WARNING[XFORMERS]: xFormers can't load C++/CUDA extensions. xFormers was built for:
+    PyTorch 2.1.0+cu118 with CUDA 1108 (you have 2.1.0+cu121)
+    Python  3.10.13 (you have 3.10.9)
+  Please reinstall xformers (see https://github.com/facebookresearch/xformers#installing-xformers)
+  Memory-efficient attention, SwiGLU, sparse and more won't be available.
+  Set XFORMERS_MORE_DETAILS=1 for more details
+xformers version: 0.0.22.post4+cu118
+Set vram state to: NORMAL_VRAM
+Device: cuda:0 Tesla T4 : cudaMallocAsync
+VAE dtype: torch.float32
+Using pytorch cross attention
+****** User settings have been changed to be stored on the server instead of browser storage. ******
+****** For multi-user setups add the --multi-user CLI argument to enable multiple user profiles. ******
+### Loading: ComfyUI-Manager (V2.30)
+### ComfyUI Revision: 2171 [4f63ee99] | Released on '2024-05-10'
+[AnimateDiffEvo] - ERROR - No motion models found. Please download one and place in: ['/root/AI/ComfyUI/custom_nodes/ComfyUI-AnimateDiff-Evolved/models', '/root/AI/ComfyUI/models/animatediff_models']
+
+Import times for custom nodes:
+   0.0 seconds: /root/AI/ComfyUI/custom_nodes/websocket_image_save.py
+   0.1 seconds: /root/AI/ComfyUI/custom_nodes/ComfyUI-Manager
+   0.1 seconds: /root/AI/ComfyUI/custom_nodes/ComfyUI-AnimateDiff-Evolved
+
+[ComfyUI-Manager] default cache updated: https://raw.githubusercontent.com/ltdrdata/ComfyUI-Manager/main/model-list.json
+[ComfyUI-Manager] default cache updated: https://raw.githubusercontent.com/ltdrdata/ComfyUI-Manager/main/alter-list.json
+[ComfyUI-Manager] default cache updated: https://raw.githubusercontent.com/ltdrdata/ComfyUI-Manager/main/custom-node-list.json
+[ComfyUI-Manager] default cache updated: https://raw.githubusercontent.com/ltdrdata/ComfyUI-Manager/main/extension-node-map.json
+
+ComfyUI finished loading, trying to launch cloudflared (if it gets stuck here cloudflared is having issues)
+
+Exception in thread Thread-1 (iframe_thread):
+Traceback (most recent call last):
+  File "/opt/conda/lib/python3.10/threading.py", line 1016, in _bootstrap_inner
+    self.run()
+  File "/opt/conda/lib/python3.10/threading.py", line 953, in run
+    self._target(*self._args, **self._kwargs)
+  File "/root/comfy4.py", line 36, in iframe_thread
+    p = subprocess.Popen(["cloudflared", "tunnel", "--url", "http://127.0.0.1:{}".format(port)], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+  File "/opt/conda/lib/python3.10/subprocess.py", line 971, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "/opt/conda/lib/python3.10/subprocess.py", line 1847, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: 'cloudflared'
+^C
+Stopped server
+Traceback (most recent call last):
+  File "/root/comfy4.py", line 47, in <module>
+    subprocess.run(["python", "main.py", "--dont-print-server"])
+  File "/opt/conda/lib/python3.10/subprocess.py", line 505, in run
+    stdout, stderr = process.communicate(input, timeout=timeout)
+  File "/opt/conda/lib/python3.10/subprocess.py", line 1146, in communicate
+    self.wait()
+  File "/opt/conda/lib/python3.10/subprocess.py", line 1209, in wait
+    return self._wait(timeout=timeout)
+  File "/opt/conda/lib/python3.10/subprocess.py", line 1943, in _wait
+    (pid, sts) = self._try_wait(0)
+  File "/opt/conda/lib/python3.10/subprocess.py", line 1901, in _try_wait
+    (pid, sts) = os.waitpid(self.pid, wait_flags)
+KeyboardInterrupt
