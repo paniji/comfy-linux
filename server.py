@@ -12,6 +12,16 @@ COMFY_WORKSPACE = "AI/ComfyUI"
 # Connecting to Cloudflare
 print("Connecting to Cloudflare...")
 
+#Amazon Linux
+# Add cloudflared-ascii.repo to /etc/yum.repos.d/ 
+curl -fsSl https://pkg.cloudflare.com/cloudflared-ascii.repo | sudo tee /etc/yum.repos.d/cloudflared-ascii.repo
+
+#update repo
+#sudo yum update
+
+# install cloudflared
+#sudo yum install cloudflared
+
 # Download and install cloudflared
 cloudflared_url = "https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.rpm"
 if platform.system() == "Linux":
