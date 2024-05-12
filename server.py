@@ -23,12 +23,12 @@ curl -fsSl https://pkg.cloudflare.com/cloudflared-ascii.repo | sudo tee /etc/yum
 #sudo yum install cloudflared
 
 # Download and install cloudflared
-cloudflared_url = "https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.rpm"
-if platform.system() == "Linux":
+#cloudflared_url = "https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.rpm"
+#if platform.system() == "Linux":
     # Use yum for Amazon Linux 2
-    subprocess.run(["yum", "install", "-y", cloudflared_url])
-else:
-    print("Unsupported operating system")
+    #subprocess.run(["yum", "install", "-y", cloudflared_url])
+#else:
+    #print("Unsupported operating system")
 
 # Change to the ComfyUI workspace
 os.chdir(COMFY_WORKSPACE)
