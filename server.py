@@ -10,7 +10,7 @@ import platform
 COMFY_WORKSPACE = "AI/ComfyUI"
 
 # Connecting to Cloudflare
-print("Connecting to Cloudflare...")
+#print("Connecting to Cloudflare...")
 
 #Amazon Linux
 # Add cloudflared-ascii.repo to /etc/yum.repos.d/ 
