@@ -14,7 +14,7 @@ print("Connecting to Cloudflare...")
 
 #Amazon Linux
 # Add cloudflared-ascii.repo to /etc/yum.repos.d/ 
-curl -fsSl https://pkg.cloudflare.com/cloudflared-ascii.repo | sudo tee /etc/yum.repos.d/cloudflared-ascii.repo
+#curl -fsSl https://pkg.cloudflare.com/cloudflared-ascii.repo | sudo tee /etc/yum.repos.d/cloudflared-ascii.repo
 
 #update repo
 #sudo yum update
