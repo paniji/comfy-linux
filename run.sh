@@ -1,8 +1,8 @@
 #yum install -y git
 #git clone https://github.com/paniji/comfy-linux.git 
 #cd comfy-linux
-pip install -r requirements.txt
-mv cpu/svc/flask-app.service /etc/systemd/system/
+pip3 install -r requirements.txt
+sudo mv cpu/svc/flask-app.service /etc/systemd/system/
 sudo systemctl daemon-reload
 sudo systemctl start flask-app
 sudo systemctl enable flask-app
