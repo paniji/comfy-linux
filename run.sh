@@ -12,7 +12,7 @@ sudo systemctl status flask-app
 sudo mv cpu/svc/s3-uploader.service /etc/systemd/system/
 sudo systemctl daemon-reload
 sudo systemctl enable s3-uploader
-sudo systemctl start s3-uploader
+sudo systemctl restart s3-uploader
 sudo systemctl status s3-uploader
 
 

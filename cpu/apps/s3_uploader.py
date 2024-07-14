@@ -23,21 +23,32 @@ def upload_file_to_s3(file_path, bucket_name, key):
         print(f"Failed to upload {file_path} to S3: {str(e)}")
         return False
 
+def upload_directory_to_s3(local_directory, bucket_name, s3_prefix=''):
+    """Uploads a directory and its contents to an S3 bucket."""
+    for root, dirs, files in os.walk(local_directory):
+        for filename in files:
+            local_path = os.path.join(root, filename)
+            relative_path = os.path.relpath(local_path, local_directory)
+            s3_path = os.path.join(s3_prefix, relative_path)
+
+            if upload_file_to_s3(local_path, bucket_name, s3_path):
+                os.remove(local_path)
+                print(f"File {local_path} removed after upload")
+            else:
+                print(f"Failed to upload {local_path}, will retry later")
+
+        for dir in dirs:
+            dir_path = os.path.join(root, dir)
+            s3_path = os.path.join(s3_prefix, os.path.relpath(dir_path, local_directory))
+            s3_client.put_object(Bucket=bucket_name, Key=s3_path + '/')
+
 def main():
     """Main function to continuously check the workspace and upload files to S3."""
     while True:
         try:
-            for filename in os.listdir(COMFY_WORKSPACE):
-                if filename.endswith(".png"):  # Adjust the condition if you want to upload other file types
-                    file_path = os.path.join(COMFY_WORKSPACE, filename)
-                    key = filename
-                    
-                    if upload_file_to_s3(file_path, S3_BUCKET_NAME, key):
-                        os.remove(file_path)
-                        print(f"File {file_path} removed after upload")
-                    else:
-                        print(f"Failed to upload {file_path}, will retry later")
-                    
+            if os.path.exists(COMFY_WORKSPACE):
+                upload_directory_to_s3(COMFY_WORKSPACE, S3_BUCKET_NAME)
+
         except Exception as e:
             print(f"An error occurred: {str(e)}")
 
