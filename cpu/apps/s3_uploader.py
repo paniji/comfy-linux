@@ -5,7 +5,7 @@ from botocore.exceptions import NoCredentialsError
 
 # Define constants
 COMFY_WORKSPACE = "AI/ComfyUI/Output"
-S3_BUCKET_NAME = ""  # Replace with your S3 bucket name
+S3_BUCKET_NAME = "autosynth-image-324278473885-us-east-1-dev"  # Replace with your S3 bucket name
 
 # Initialize S3 client
 s3_client = boto3.client('s3')
