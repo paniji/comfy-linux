@@ -13,12 +13,12 @@ def handle_prompt():
     if not data:
         return jsonify({"error": "Invalid JSON"}), 400
 
-    # Extract path and key from the JSON
-    path = data.get('path')
-    key = data.get('key')
-    
-    if not path or not key:
-        return jsonify({"error": "Missing 'path' or 'key' in the JSON data"}), 400
+    try:
+        # Extract path and key from the new JSON structure
+        path = data["6"]["inputs"]["text"]
+        key = data["9"]["inputs"]["filename_prefix"] #.split("--")[1]
+    except KeyError as e:
+        return jsonify({"error": f"Missing key in JSON data: {str(e)}"}), 400
 
     try:
         # Download the PNG file
@@ -43,4 +43,4 @@ def handle_prompt():
         return jsonify({"error": f"An error occurred: {str(e)}"}), 500
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8188)
+    app.run(host='0.0.0.0', port=5155)
