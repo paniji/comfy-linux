@@ -7,7 +7,7 @@ from botocore.exceptions import NoCredentialsError, ClientError
 # Constants
 SSM_PARAMETER_NAME = "/sqs/cpu-image-queue-url"  # SSM Parameter name for the SQS queue URL
 SQS_POLL_INTERVAL = 10  # Time in seconds to wait between polling SQS
-LOCAL_WEB_SERVER_URL = "http://localhost:8188/prompt"
+LOCAL_WEB_SERVER_URL = "http://localhost:5155/prompt"
 
 # Initialize SSM and SQS clients
 ssm_client = boto3.client('ssm')

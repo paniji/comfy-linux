@@ -22,7 +22,7 @@ sudo systemctl restart sqs-poller
 sudo systemctl enable sqs-poller
 sudo systemctl status sqs-poller
 
-# curl -X POST http://localhost:8188/prompt -H "Content-Type: application/json" -d '{
+# curl -X POST http://localhost:5155/prompt -H "Content-Type: application/json" -d '{
 #   "3": {
 #     "inputs": {
 #       "seed": 763007004578560,
@@ -117,7 +117,7 @@ sudo systemctl status sqs-poller
 #   },
 #   "9": {
 #     "inputs": {
-#       "filename_prefix": "pania2--d70297a8-e567-42bd-8ed6-7173b2daf30c",
+#       "filename_prefix": "pania2--d84d14f2-b5b8-452b-9529-255d4a964fb4_test001",
 #       "images": [
 #         "8",
 #         0
