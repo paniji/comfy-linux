@@ -9,9 +9,15 @@ SSM_PARAMETER_NAME = "/sqs/cpu-image-queue-url"  # SSM Parameter name for the SQ
 SQS_POLL_INTERVAL = 10  # Time in seconds to wait between polling SQS
 LOCAL_WEB_SERVER_URL = "http://localhost:5155/prompt"
 
+def get_region():
+    """Fetches the AWS region from environment variables or default configuration."""
+    session = boto3.session.Session()
+    return session.region_name
+
 # Initialize SSM and SQS clients
-ssm_client = boto3.client('ssm')
-sqs_client = boto3.client('sqs')
+region = get_region()
+ssm_client = boto3.client('ssm', region_name=region)
+sqs_client = boto3.client('sqs', region_name=region)
 
 def get_sqs_queue_url():
     """Fetches the SQS queue URL from SSM Parameter Store."""
