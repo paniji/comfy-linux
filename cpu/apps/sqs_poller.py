@@ -16,8 +16,8 @@ def get_region():
 
 # Initialize SSM and SQS clients
 region = get_region()
-ssm_client = boto3.client('ssm', region_name=region)
-sqs_client = boto3.client('sqs', region_name=region)
+ssm_client = boto3.client('ssm', region_name='us-east-1')
+sqs_client = boto3.client('sqs', region_name='us-east-1')
 
 def get_sqs_queue_url():
     """Fetches the SQS queue URL from SSM Parameter Store."""
