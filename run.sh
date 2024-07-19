@@ -42,14 +42,14 @@ sudo systemctl restart sqs-poller
 sudo systemctl enable sqs-poller
 sudo systemctl status sqs-poller
 
-## Prep comfy install
-python3 cpu/prep/comfy.py
-## Run comfy service
-sudo cp cpu/svc/comfyui.service /etc/systemd/system/
-sudo systemctl daemon-reload
-sudo systemctl restart comfyui
-sudo systemctl enable comfyui
-sudo systemctl status comfyui
+# ## Prep comfy install
+# python3 cpu/prep/comfy.py
+# ## Run comfy service
+# sudo cp cpu/svc/comfyui.service /etc/systemd/system/
+# sudo systemctl daemon-reload
+# sudo systemctl restart comfyui
+# sudo systemctl enable comfyui
+# sudo systemctl status comfyui
 
 # To get more detailed logs for a service managed by systemd, you can use the journalctl command in addition to systemctl status. Here are the steps:
 
