@@ -20,7 +20,7 @@ COMFY_WORKSPACE = "AI/ComfyUI"
 #sudo yum update
 
 # install cloudflared
-#sudo yum install cloudflared
+#sudo yum install cloudflared -y
 
 # Download and install cloudflared
 #cloudflared_url = "https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.rpm"

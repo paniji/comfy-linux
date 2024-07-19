@@ -1,0 +1,1 @@
+python3 cpu/test/sqs_length_metric_asg_scale.py
