@@ -19,10 +19,10 @@ sudo yum update -y
 # install cloudflared
 sudo yum install cloudflared -y
 
-#yum install -y git
-#git clone https://github.com/paniji/comfy-linux.git
-#git pull https://github.com/paniji/comfy-linux.git 
-#cd comfy-linux
+# sudo yum install -y git
+# git clone https://github.com/paniji/comfy-linux.git
+# it pull https://github.com/paniji/comfy-linux.git 
+# cd comfy-linux
 pip3 install -r requirements.txt
 sudo cp cpu/svc/flask-app.service /etc/systemd/system/
 sudo systemctl daemon-reload
