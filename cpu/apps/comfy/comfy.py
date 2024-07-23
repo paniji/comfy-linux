@@ -28,15 +28,15 @@ def iframe_thread(port):
     
     logging.info("ComfyUI finished loading, trying to launch cloudflared")
     
-    try:
-        p = subprocess.Popen(["cloudflared", "tunnel", "--url", "http://127.0.0.1:{}".format(port)], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        for line in p.stderr:
-            l = line.decode()
-            if "trycloudflare.com " in l:
-                cf_url = l[l.find("http"):]
-                logging.info(f"This is the URL to access ComfyUI: {cf_url}")
-    except Exception as e:
-        logging.error(f"Error launching cloudflared: {e}")
+    # try:
+    #     p = subprocess.Popen(["cloudflared", "tunnel", "--url", "http://127.0.0.1:{}".format(port)], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    #     for line in p.stderr:
+    #         l = line.decode()
+    #         if "trycloudflare.com " in l:
+    #             cf_url = l[l.find("http"):]
+    #             logging.info(f"This is the URL to access ComfyUI: {cf_url}")
+    # except Exception as e:
+    #     logging.error(f"Error launching cloudflared: {e}")
 
 # Start a thread to check for the availability of the web server
 threading.Thread(target=iframe_thread, daemon=True, args=(8188,)).start()
