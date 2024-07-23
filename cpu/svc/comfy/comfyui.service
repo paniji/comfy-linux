@@ -5,14 +5,9 @@ After=network.target
 [Service]
 User=ec2-user
 Group=ec2-user
-WorkingDirectory=/home/ec2-user/comfy-linux/AI/ComfyUI
-ExecStart=/usr/bin/python3 /home/ec2-user/comfy-linux/AI/ComfyUI/main.py --dont-print-server
+WorkingDirectory=/home/ec2-user/comfy-linux
+ExecStart=/usr/bin/python3 /home/ec2-user/comfy-linux/server.py
 Restart=always
-
-# Output to a log file
-StandardOutput=file:/var/log/comfyui_service.log
-StandardError=file:/var/log/comfyui_service.log
 
 [Install]
 WantedBy=multi-user.target
-
