@@ -5,8 +5,8 @@
 python3 cpu/prep/comfy/comfy.py # Comfy Pre 
 bash cpu/prep/comfy/init.sh # Cloudflare etc
 
-sudo cp cpu/svc/comfy/comfyui.service /etc/systemd/system/
-sudo systemctl daemon-reload
-sudo systemctl restart comfyui
-sudo systemctl enable comfyui
-sudo systemctl status comfyui
+# sudo cp cpu/svc/comfy/comfyui.service /etc/systemd/system/
+# sudo systemctl daemon-reload
+# sudo systemctl start comfyui
+# sudo systemctl enable comfyui
+# sudo systemctl status comfyui
