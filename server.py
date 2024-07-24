@@ -31,7 +31,7 @@ def iframe_thread(port):
             print("This is the URL to access ComfyUI:", cf_url, end='')
 
 # Start a thread to check for the availability of the web server
-threading.Thread(target=iframe_thread, daemon=True, args=(8188,)).start()
+threading.Thread(target=iframe_thread, daemon=True, args=(5155,)).start()
 
 # Run main.py with the given arguments
 subprocess.run(["python", "main.py", "--dont-print-server"])
