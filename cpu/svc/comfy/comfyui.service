@@ -3,10 +3,10 @@ Description=ComfyUI Service
 After=network.target
 
 [Service]
+Type=simple
 User=ec2-user
-Group=ec2-user
-WorkingDirectory=/home/ec2-user/comfy-linux
-ExecStart=/usr/bin/python3 /home/ec2-user/comfy-linux/cpu/apps/comfy/comfy.py
+WorkingDirectory=/home/ec2-user/comfy-linux/AI/ComfyUI
+ExecStart=/bin/bash -c 'source activate pytorch; python3 main.py --listen --highvram'
 Restart=always
 
 [Install]
