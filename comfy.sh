@@ -20,12 +20,27 @@ wget -O AI/ComfyUI/models/loras/DreamyVibesArtsyle-SDXL-LoRA.safetensors "https:
 # sudo touch /var/log/comfyui_service.log
 # sudo chown ec2-user:ec2-user /var/log/comfyui_service.log
 
-## For ComfyUI service
-# sudo cp cpu/svc/comfy/comfyui.service /etc/systemd/system/
-# sudo systemctl daemon-reload
-# sudo systemctl start comfyui
-# sudo systemctl enable comfyui
-# sudo systemctl status comfyui
+# ComfyUI service
+sudo cp cpu/svc/comfy/comfyui.service /etc/systemd/system/
+sudo systemctl daemon-reload
+sudo systemctl start comfyui
+sudo systemctl enable comfyui
+sudo systemctl status comfyui
+
+# S3 Uploader service
+sudo cp cpu/svc/comfy/s3-uploader.service /etc/systemd/system/
+sudo systemctl daemon-reload
+sudo systemctl enable s3-uploader
+sudo systemctl restart s3-uploader
+sudo systemctl status s3-uploader
+
+# SQS Poller service
+sudo cp cpu/svc/comfy/sqs-poller.service /etc/systemd/system/
+sudo systemctl daemon-reload
+sudo systemctl restart sqs-poller
+sudo systemctl enable sqs-poller
+sudo systemctl status sqs-poller
 
 ## For UI access
+# source activate pytorch
 # python3 server.py
