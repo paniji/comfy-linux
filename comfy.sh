@@ -5,6 +5,8 @@
 
 source activate pytorch
 
+pip3 install -r requirements.txt
+
 pip install einops
 pip install torchsde
 pip install aiohttp
@@ -31,13 +33,13 @@ sudo systemctl status comfyui
 sudo cp cpu/svc/comfy/s3-uploader.service /etc/systemd/system/
 sudo systemctl daemon-reload
 sudo systemctl enable s3-uploader
-sudo systemctl restart s3-uploader
+sudo systemctl start s3-uploader
 sudo systemctl status s3-uploader
 
 # SQS Poller service
 sudo cp cpu/svc/comfy/sqs-poller.service /etc/systemd/system/
 sudo systemctl daemon-reload
-sudo systemctl restart sqs-poller
+sudo systemctl start sqs-poller
 sudo systemctl enable sqs-poller
 sudo systemctl status sqs-poller
 
