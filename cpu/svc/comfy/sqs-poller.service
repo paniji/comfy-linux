@@ -6,7 +6,7 @@ After=network.target
 User=ec2-user
 Group=ec2-user
 WorkingDirectory=/home/ec2-user/comfy-linux
-ExecStart=/usr/bin/python3 /home/ec2-user/comfy-linux/cpu/apps/comfy/sqs_poller.py
+ExecStart=python /home/ec2-user/comfy-linux/cpu/apps/comfy/sqs_poller.py
 Restart=always
 
 [Install]
