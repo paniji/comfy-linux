@@ -24,8 +24,8 @@ def queue_prompt(data):
     json_data = json.dumps(p).encode('utf-8')
 
     # Post the JSON data to the ComfyUI prompt endpoint
-    headers = {'Content-Type': 'application/json'}
-    result = session.post(url=comfy_url, data=json_data, headers=headers)
+    #headers = {'Content-Type': 'application/json'}
+    result = session.post(url=comfy_url, data=json_data)
     
     # Print the result of the POST request
     print("Response Status Code:", result.status_code)
