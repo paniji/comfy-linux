@@ -39,6 +39,13 @@ sudo systemctl start sqs-poller
 sudo systemctl enable sqs-poller
 sudo systemctl status sqs-poller
 
+# # ComfyUI service
+sudo cp cpu/svc/comfy/comfyui.service /etc/systemd/system/
+sudo systemctl daemon-reload
+sudo systemctl start comfyui
+sudo systemctl enable comfyui
+sudo systemctl status comfyui
+
 ## Upgrade python if needed for boto3 compatibility.. sometime python worl it out and fix lines below before the services
 # cd /usr/src
 # sudo wget https://www.python.org/ftp/python/3.11.4/Python-3.11.4.tgz
