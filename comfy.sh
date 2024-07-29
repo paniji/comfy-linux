@@ -16,8 +16,8 @@ pip install spandrel
 python3 cpu/prep/comfy/comfy.py # Comfy Pre 
 bash cpu/prep/comfy/init.sh # Cloudflare etc
 
-wget -O AI/ComfyUI/models/checkpoints/wildcardxXLANIMATION.safetensors "https://civitai.com/api/download/models/357959?&token=4304d2c858702a4457d4d46c64e86420"
-wget -O AI/ComfyUI/models/loras/DreamyVibesArtsyle-SDXL-LoRA.safetensors "https://civitai.com/api/download/models/287607?&token=4304d2c858702a4457d4d46c64e86420"
+# wget -O AI/ComfyUI/models/checkpoints/wildcardxXLANIMATION.safetensors "https://civitai.com/api/download/models/357959?&token=4304d2c858702a4457d4d46c64e86420"
+# wget -O AI/ComfyUI/models/loras/DreamyVibesArtsyle-SDXL-LoRA.safetensors "https://civitai.com/api/download/models/287607?&token=4304d2c858702a4457d4d46c64e86420"
 
 python3 --version
 python3 -m pip install --upgrade pip
