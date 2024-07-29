@@ -85,7 +85,7 @@ data = {
     },
     "6": {
         "inputs": {
-            "text": "beautiful scenery nature glass bottle landscape, , purple galaxy bottle,",
+            "text": "beautiful scenery nature in a purple galaxy background",
             "clip": [
                 "10",
                 1
@@ -127,7 +127,7 @@ data = {
     },
     "9": {
         "inputs": {
-            "filename_prefix": "ComfyUI",
+            "filename_prefix": "paniam--b3d74d67-269a-4f43-8d52-8c398189d983_test001",
             "images": [
                 "8",
                 0
