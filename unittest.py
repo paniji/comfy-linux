@@ -127,7 +127,7 @@ data = {
     },
     "9": {
         "inputs": {
-            "filename_prefix": "paniam--b3d74d67-269a-4f43-8d52-8c398189d983_test001",
+            "filename_prefix": "pania2--b3d74d67-269a-4f43-8d52-8c398189d983",
             "images": [
                 "8",
                 0
