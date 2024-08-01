@@ -11,36 +11,26 @@ LOCAL_WEB_SERVER_URL = "http://localhost:8188/prompt"
 REGION_NAME = "us-east-1"  # AWS region
 SQS_POLL_INTERVAL = 5  # Default time in seconds to wait between polling SQS
 MAX_SQS_MESSAGES = 50  # Max messages to allow in SQS
-# FILES_TO_DOWNLOAD = [
-#     {
-#         "path": "AI/ComfyUI/models/checkpoints/wildcardxXLANIMATION.safetensors",
-#         "url": "https://civitai.com/api/download/models/357959?&token=4304d2c858702a4457d4d46c64e86420"
-#     },
-#     {
-#         "path": "AI/ComfyUI/models/loras/DreamyVibesArtsyle-SDXL-LoRA.safetensors",
-#         "url": "https://civitai.com/api/download/models/287607?&token=4304d2c858702a4457d4d46c64e86420"
-#     }
-# ]
+MODELS = [
+    {
+        "path": "/home/ec2-user/AI/ComfyUI/models/checkpoints/wildcardxXLANIMATION.safetensors",
+    },
+    {
+        "path": "/home/ec2-user/AI/ComfyUI/models/loras/DreamyVibesArtsyle-SDXL-LoRA.safetensors",
+    }
+]
 
 def get_region():
     """Fetches the AWS region from environment variables or default configuration."""
     session = boto3.session.Session()
     return session.region_name
 
-# def download_files_if_not_exist():
-#     """Download required files if they do not already exist."""
-#     for file in FILES_TO_DOWNLOAD:
-#         if not os.path.exists(file["path"]):
-#             print(f"Downloading {file['path']} from {file['url']}")
-#             response = requests.get(file["url"], stream=True)
-#             if response.status_code == 200:
-#                 os.makedirs(os.path.dirname(file["path"]), exist_ok=True)
-#                 with open(file["path"], "wb") as f:
-#                     for chunk in response.iter_content(chunk_size=8192):
-#                         f.write(chunk)
-#                 print(f"Downloaded {file['path']}")
-#             else:
-#                 print(f"Failed to download {file['path']}, status code: {response.status_code}")
+def check_models_exist():
+    """Check if required files already exist."""
+    for file in MODELS:
+        if not os.path.exists(file["path"]):
+            return False
+    return True
 
 # Initialize SSM and SQS clients
 region = get_region()
@@ -108,8 +98,10 @@ def poll_sqs_and_process_messages():
         print("Failed to retrieve SQS queue URL.")
         return
 
-    # Download required files if they do not exist
-    # download_files_if_not_exist()
+    # Check if required models are downloaded
+    if not check_models_exist():
+        print("Models are not downloaded yet.")
+        return
 
     while True:
         try:

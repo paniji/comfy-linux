@@ -27,7 +27,7 @@ def queue_prompt(data):
     #headers = {'Content-Type': 'application/json'}
     result = session.post(url=comfy_url, data=json_data)
     
-    # Print the result of the POST request
+    # Print the result of the POST request Response Text: {"prompt_id": "f57e14b6-7de7-41ee-bdce-a15339667524", "number": 1, "node_errors": {}}
     print("Response Status Code:", result.status_code)
     print("Response Text:", result.text)
 
