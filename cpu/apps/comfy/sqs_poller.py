@@ -1,3 +1,4 @@
+import os
 import boto3
 import requests
 import json
@@ -10,11 +11,26 @@ LOCAL_WEB_SERVER_URL = "http://localhost:8188/prompt"
 REGION_NAME = "us-east-1"  # AWS region
 SQS_POLL_INTERVAL = 5  # Default time in seconds to wait between polling SQS
 MAX_SQS_MESSAGES = 50  # Max messages to allow in SQS
+MODELS = [
+    {
+        "path": "/home/ec2-user/AI/ComfyUI/models/checkpoints/wildcardxXLANIMATION.safetensors",
+    },
+    {
+        "path": "/home/ec2-user/AI/ComfyUI/models/loras/DreamyVibesArtsyle-SDXL-LoRA.safetensors",
+    }
+]
 
 def get_region():
     """Fetches the AWS region from environment variables or default configuration."""
     session = boto3.session.Session()
     return session.region_name
+
+def check_models_exist():
+    """Check if required files already exist."""
+    for file in MODELS:
+        if not os.path.exists(file["path"]):
+            return False
+    return True
 
 # Initialize SSM and SQS clients
 region = get_region()
@@ -56,11 +72,35 @@ def get_comfyui_queue_length():
         print(f"Error fetching queue length from ComfyUI: {e}")
         return None
 
+def queue_prompt(data):
+    """Send prompt data to ComfyUI."""
+    COMFY = "http://localhost:8188"
+    COMFY = os.environ.get('COMFY', COMFY)
+    print("Using Comfy URL:", COMFY)
+    
+    session = requests.Session()
+    session.verify = True
+
+    comfy_url = f"{COMFY}/prompt"
+    p = {"prompt": data}
+    json_data = json.dumps(p).encode('utf-8')
+
+    result = session.post(url=comfy_url, data=json_data)
+    
+    print("Response Status Code:", result.status_code)
+    print("Response Text:", result.text)
+    return result.status_code
+
 def poll_sqs_and_process_messages():
     """Polls SQS for messages and processes them."""
     sqs_queue_url = get_sqs_queue_url()
     if not sqs_queue_url:
         print("Failed to retrieve SQS queue URL.")
+        return
+
+    # Check if required models are downloaded
+    if not check_models_exist():
+        print("Models are not downloaded yet.")
         return
 
     while True:
@@ -81,7 +121,7 @@ def poll_sqs_and_process_messages():
             if comfyui_queue_length == 0 and sqs_queue_length > 0:
                 response = sqs_client.receive_message(
                     QueueUrl=sqs_queue_url,
-                    MaxNumberOfMessages=1,  # Adjust based on your needs
+                    MaxNumberOfMessages=1,
                     WaitTimeSeconds=10  # Long polling
                 )
 
@@ -91,9 +131,9 @@ def poll_sqs_and_process_messages():
                     receipt_handle = message['ReceiptHandle']
 
                     try:
-                        # Send message to local web server
-                        resp = requests.post(LOCAL_WEB_SERVER_URL, json=json.loads(message_body))
-                        if resp.status_code == 200:
+                        # Send message to ComfyUI
+                        status_code = queue_prompt(json.loads(message_body))
+                        if status_code == 200:
                             # Delete message from SQS
                             sqs_client.delete_message(
                                 QueueUrl=sqs_queue_url,
@@ -101,10 +141,10 @@ def poll_sqs_and_process_messages():
                             )
                             print(f"Message {receipt_handle} processed and deleted successfully.")
                         else:
-                            print(f"Failed to process message {receipt_handle}, response code: {resp.status_code}")
+                            print(f"Failed to process message {receipt_handle}, response code: {status_code}")
 
                     except requests.RequestException as e:
-                        print(f"Error sending message to local web server: {e}")
+                        print(f"Error sending message to ComfyUI: {e}")
 
             # Adjust polling interval based on SQS queue length
             if sqs_queue_length >= MAX_SQS_MESSAGES:
