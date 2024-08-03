@@ -13,11 +13,6 @@ REGION_NAME = "us-east-1"  # AWS region
 SQS_POLL_INTERVAL = 2  # Default time in seconds to wait between polling SQS
 MAX_SQS_MESSAGES = 50  # Max messages to allow in SQS
 
-def get_region():
-    """Fetches the AWS region from environment variables or default configuration."""
-    session = boto3.session.Session()
-    return session.region_name
-
 def get_ssm_parameter(name):
     """Fetches the value of an SSM parameter."""
     ssm_client = boto3.client('ssm', region_name=REGION_NAME)
@@ -28,25 +23,35 @@ def get_ssm_parameter(name):
         print(f"SSM error: {e}")
         return None
 
-def get_model_paths():
-    """Fetches the list of model paths from the SSM Parameter Store."""
-    parameter_value = get_ssm_parameter(SSM_MODELS_PARAMETER_NAME)
-    if parameter_value:
-        return parameter_value.split(',')
-    else:
-        return []
+def get_ssm_parameter_list(name):
+    """Fetches the value of an SSM StringList parameter."""
+    ssm_client = boto3.client('ssm', region_name=REGION_NAME)
+    try:
+        response = ssm_client.get_parameter(Name=name)
+        return response['Parameter']['Value'].split(',')
+    except (NoCredentialsError, ClientError) as e:
+        print(f"SSM error: {e}")
+        return None
 
-def check_models_exist(model_paths):
+def get_files_to_download():
+    """Fetches the list of files to download from SSM Parameter Store."""
+    file_names = get_ssm_parameter_list(SSM_MODELS_PARAMETER_NAME)
+    files_to_download = []
+    
+    for file_name in file_names:
+        path = get_ssm_parameter(f"/comfy-ui/{file_name}/path")
+        url = get_ssm_parameter(f"/comfy-ui/{file_name}/url")
+        if path and url:
+            files_to_download.append({"path": path, "url": url})
+    
+    return files_to_download
+
+def check_models_exist(files_to_download):
     """Check if required files already exist."""
-    for path in model_paths:
-        if not os.path.exists(path):
+    for file in files_to_download:
+        if not os.path.exists(file["path"]):
             return False
     return True
-
-# Initialize SSM and SQS clients
-region = get_region()
-ssm_client = boto3.client('ssm', region_name=REGION_NAME)
-sqs_client = boto3.client('sqs', region_name=REGION_NAME)
 
 def get_sqs_queue_url():
     """Fetches the SQS queue URL from SSM Parameter Store."""
@@ -54,6 +59,7 @@ def get_sqs_queue_url():
 
 def get_sqs_queue_length(queue_url):
     """Fetches the current length of the SQS queue."""
+    sqs_client = boto3.client('sqs', region_name=REGION_NAME)
     try:
         response = sqs_client.get_queue_attributes(
             QueueUrl=queue_url,
@@ -104,17 +110,19 @@ def poll_sqs_and_process_messages():
         print("Failed to retrieve SQS queue URL.")
         return
 
-    # Get model paths from SSM parameter store
-    model_paths = get_model_paths()
-    if not model_paths:
-        print("Failed to retrieve model paths from SSM.")
+    # Get files to download from SSM parameter store
+    files_to_download = get_files_to_download()
+    if not files_to_download:
+        print("Failed to retrieve files to download from SSM.")
         return
 
     # Check if required models are downloaded
-    if not check_models_exist(model_paths):
+    if not check_models_exist(files_to_download):
         print("Models are not downloaded yet.")
         return
 
+    sqs_client = boto3.client('sqs', region_name=REGION_NAME)
+    
     while True:
         try:
             # Get the current SQS queue length
