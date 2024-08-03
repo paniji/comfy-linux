@@ -6,8 +6,8 @@ import time
 from botocore.exceptions import NoCredentialsError, ClientError
 
 # Constants
-SSM_PARAMETER_NAME = "/sqs/cpu-image-queue-url"  # SSM Parameter name for the SQS queue URL
-SSM_MODELS_PARAMETER_NAME = "/sqs/cpu-image-queue1-models"  # SSM Parameter name for the models list
+SSM_PARAMETER_NAME = os.environ.get('SSM_PARAMETER_NAME')  # SSM Parameter name for the SQS queue URL
+SSM_MODELS_PARAMETER_NAME = os.environ.get('SSM_MODELS_PARAMETER_NAME')  # SSM Parameter name for the models list
 LOCAL_WEB_SERVER_URL = "http://localhost:8188/prompt"
 REGION_NAME = "us-east-1"  # AWS region
 SQS_POLL_INTERVAL = 2  # Default time in seconds to wait between polling SQS
