@@ -9,14 +9,14 @@ from botocore.exceptions import NoCredentialsError, ClientError
 SSM_PARAMETER_NAME = "/sqs/cpu-image-queue-url"  # SSM Parameter name for the SQS queue URL
 LOCAL_WEB_SERVER_URL = "http://localhost:8188/prompt"
 REGION_NAME = "us-east-1"  # AWS region
-SQS_POLL_INTERVAL = 5  # Default time in seconds to wait between polling SQS
+SQS_POLL_INTERVAL = 2  # Default time in seconds to wait between polling SQS
 MAX_SQS_MESSAGES = 50  # Max messages to allow in SQS
 MODELS = [
     {
-        "path": "/home/ec2-user/AI/ComfyUI/models/checkpoints/wildcardxXLANIMATION.safetensors",
+        "path": "/home/ec2-user/comfy-linux/AI/ComfyUI/models/checkpoints/wildcardxXLANIMATION.safetensors",
     },
     {
-        "path": "/home/ec2-user/AI/ComfyUI/models/loras/DreamyVibesArtsyle-SDXL-LoRA.safetensors",
+        "path": "/home/ec2-user/comfy-linux/AI/ComfyUI/models/loras/DreamyVibesArtsyle-SDXL-LoRA.safetensors",
     }
 ]
 

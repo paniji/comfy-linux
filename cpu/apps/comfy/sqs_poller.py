@@ -7,28 +7,39 @@ from botocore.exceptions import NoCredentialsError, ClientError
 
 # Constants
 SSM_PARAMETER_NAME = "/sqs/cpu-image-queue-url"  # SSM Parameter name for the SQS queue URL
+SSM_MODELS_PARAMETER_NAME = "/sqs/cpu-image-queue1-models"  # SSM Parameter name for the models list
 LOCAL_WEB_SERVER_URL = "http://localhost:8188/prompt"
 REGION_NAME = "us-east-1"  # AWS region
-SQS_POLL_INTERVAL = 5  # Default time in seconds to wait between polling SQS
+SQS_POLL_INTERVAL = 2  # Default time in seconds to wait between polling SQS
 MAX_SQS_MESSAGES = 50  # Max messages to allow in SQS
-MODELS = [
-    {
-        "path": "/home/ec2-user/comfy-linux/AI/ComfyUI/models/checkpoints/wildcardxXLANIMATION.safetensors",
-    },
-    {
-        "path": "/home/ec2-user/comfy-linux/AI/ComfyUI/models/loras/DreamyVibesArtsyle-SDXL-LoRA.safetensors",
-    }
-]
 
 def get_region():
     """Fetches the AWS region from environment variables or default configuration."""
     session = boto3.session.Session()
     return session.region_name
 
-def check_models_exist():
+def get_ssm_parameter(name):
+    """Fetches the value of an SSM parameter."""
+    ssm_client = boto3.client('ssm', region_name=REGION_NAME)
+    try:
+        response = ssm_client.get_parameter(Name=name)
+        return response['Parameter']['Value']
+    except (NoCredentialsError, ClientError) as e:
+        print(f"SSM error: {e}")
+        return None
+
+def get_model_paths():
+    """Fetches the list of model paths from the SSM Parameter Store."""
+    parameter_value = get_ssm_parameter(SSM_MODELS_PARAMETER_NAME)
+    if parameter_value:
+        return parameter_value.split(',')
+    else:
+        return []
+
+def check_models_exist(model_paths):
     """Check if required files already exist."""
-    for file in MODELS:
-        if not os.path.exists(file["path"]):
+    for path in model_paths:
+        if not os.path.exists(path):
             return False
     return True
 
@@ -39,12 +50,7 @@ sqs_client = boto3.client('sqs', region_name=REGION_NAME)
 
 def get_sqs_queue_url():
     """Fetches the SQS queue URL from SSM Parameter Store."""
-    try:
-        response = ssm_client.get_parameter(Name=SSM_PARAMETER_NAME)
-        return response['Parameter']['Value']
-    except (NoCredentialsError, ClientError) as e:
-        print(f"SSM error: {e}")
-        return None
+    return get_ssm_parameter(SSM_PARAMETER_NAME)
 
 def get_sqs_queue_length(queue_url):
     """Fetches the current length of the SQS queue."""
@@ -98,8 +104,14 @@ def poll_sqs_and_process_messages():
         print("Failed to retrieve SQS queue URL.")
         return
 
+    # Get model paths from SSM parameter store
+    model_paths = get_model_paths()
+    if not model_paths:
+        print("Failed to retrieve model paths from SSM.")
+        return
+
     # Check if required models are downloaded
-    if not check_models_exist():
+    if not check_models_exist(model_paths):
         print("Models are not downloaded yet.")
         return
 
