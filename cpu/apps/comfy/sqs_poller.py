@@ -117,9 +117,9 @@ def poll_sqs_and_process_messages():
         return
 
     # Check if required models are downloaded
-    if not check_models_exist(files_to_download):
-        print("Models are not downloaded yet.")
-        return
+    while not check_models_exist(files_to_download):
+        print("Models are not downloaded yet. Waiting...")
+        time.sleep(5)  # Wait for 10 seconds before checking again
 
     sqs_client = boto3.client('sqs', region_name=REGION_NAME)
     
