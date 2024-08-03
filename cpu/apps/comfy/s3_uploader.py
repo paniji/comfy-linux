@@ -1,14 +1,25 @@
 import os
 import time
 import boto3
-from botocore.exceptions import NoCredentialsError
+from botocore.exceptions import NoCredentialsError, ClientError
 
 # Define constants
 COMFY_WORKSPACE = "AI/ComfyUI/output"
-S3_BUCKET_NAME = "autosynth-image-324278473885-us-east-1-dev"  # Replace with your S3 bucket name
+SSM_PARAMETER_NAME = "/s3image/bucket_name"  # SSM Parameter name for the S3 bucket name
+REGION_NAME = "us-east-1"  # AWS region
 
-# Initialize S3 client
+# Initialize S3 and SSM clients
 s3_client = boto3.client('s3')
+ssm_client = boto3.client('ssm', region_name=REGION_NAME)
+
+def get_ssm_parameter(name):
+    """Fetches the value of an SSM parameter."""
+    try:
+        response = ssm_client.get_parameter(Name=name)
+        return response['Parameter']['Value']
+    except (NoCredentialsError, ClientError) as e:
+        print(f"SSM error: {e}")
+        return None
 
 def upload_file_to_s3(file_path, bucket_name, key):
     """Uploads a file to an S3 bucket."""
@@ -25,6 +36,11 @@ def upload_file_to_s3(file_path, bucket_name, key):
 
 def main():
     """Main function to continuously check the workspace and upload files to S3."""
+    s3_bucket_name = get_ssm_parameter(SSM_PARAMETER_NAME)
+    if not s3_bucket_name:
+        print("Failed to retrieve S3 bucket name from SSM.")
+        return
+
     while True:
         try:
             for filename in os.listdir(COMFY_WORKSPACE):
@@ -32,7 +48,7 @@ def main():
                     file_path = os.path.join(COMFY_WORKSPACE, filename)
                     key = filename
                     
-                    if upload_file_to_s3(file_path, S3_BUCKET_NAME, key):
+                    if upload_file_to_s3(file_path, s3_bucket_name, key):
                         os.remove(file_path)
                         print(f"File {file_path} removed after upload")
                     else:
@@ -41,7 +57,7 @@ def main():
         except Exception as e:
             print(f"An error occurred: {str(e)}")
 
-        time.sleep(60)  # Check every 60 seconds
+        time.sleep(2)  # Check every 60 seconds
 
 if __name__ == "__main__":
     main()
