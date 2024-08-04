@@ -35,9 +35,9 @@ sudo systemctl status s3-uploader
 
 sudo cp cpu/svc/comfy/sqs-poller.service /etc/systemd/system/
 sudo systemctl daemon-reload
-sudo systemctl start sqs-poller
+#sudo systemctl start sqs-poller
 sudo systemctl enable sqs-poller
-sudo systemctl status sqs-poller
+#sudo systemctl status sqs-poller
 
 # # ComfyUI service
 sudo cp cpu/svc/comfy/comfyui.service /etc/systemd/system/
