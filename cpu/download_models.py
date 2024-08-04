@@ -4,7 +4,7 @@ import boto3
 from botocore.exceptions import NoCredentialsError, ClientError
 
 # Constants
-SSM_MODELS_PARAMETER_NAME = "/sqs/cpu-image-queue1-models"  # SSM Parameter name for the models list
+SSM_MODELS_PARAMETER_NAME = os.environ.get('SSM_MODELS_PARAMETER_NAME')  # SSM Parameter name for the models list
 REGION_NAME = "us-east-1"  # AWS region
 
 def get_ssm_parameter(name):
@@ -40,6 +40,39 @@ def get_files_to_download():
     
     return files_to_download
 
+def download_file_http(url, file_path):
+    """Downloads a file from an HTTP(S) URL."""
+    try:
+        response = requests.get(url, stream=True)
+        if response.status_code == 200:
+            os.makedirs(os.path.dirname(file_path), exist_ok=True)
+            with open(file_path, "wb") as f:
+                for chunk in response.iter_content(chunk_size=8192):
+                    f.write(chunk)
+            print(f"Downloaded {file_path} from {url}")
+        else:
+            print(f"Failed to download {file_path} from {url}, status code: {response.status_code}")
+    except requests.RequestException as e:
+        print(f"Error downloading {file_path} from {url}: {e}")
+
+def download_file_s3(url, file_path):
+    """Downloads a file from an S3 URL."""
+    s3_client = boto3.client('s3')
+    try:
+        bucket_name, key = parse_s3_url(url)
+        os.makedirs(os.path.dirname(file_path), exist_ok=True)
+        s3_client.download_file(bucket_name, key, file_path)
+        print(f"Downloaded {file_path} from {url}")
+    except (NoCredentialsError, ClientError) as e:
+        print(f"Error downloading {file_path} from {url}: {e}")
+
+def parse_s3_url(url):
+    """Parses an S3 URL and returns the bucket name and key."""
+    url_parts = url.replace("s3://", "").split("/")
+    bucket_name = url_parts.pop(0)
+    key = "/".join(url_parts)
+    return bucket_name, key
+
 def download_files_if_not_exist():
     """Download required files if they do not already exist."""
     files_to_download = get_files_to_download()
@@ -49,16 +82,13 @@ def download_files_if_not_exist():
 
     for file in files_to_download:
         if not os.path.exists(file["path"]):
-            print(f"Downloading {file['path']} from {file['url']}")
-            response = requests.get(file["url"], stream=True)
-            if response.status_code == 200:
-                os.makedirs(os.path.dirname(file["path"]), exist_ok=True)
-                with open(file["path"], "wb") as f:
-                    for chunk in response.iter_content(chunk_size=8192):
-                        f.write(chunk)
-                print(f"Downloaded {file['path']}")
+            url = file["url"]
+            if url.startswith("http://") or url.startswith("https://"):
+                download_file_http(url, file["path"])
+            elif url.startswith("s3://"):
+                download_file_s3(url, file["path"])
             else:
-                print(f"Failed to download {file['path']}, status code: {response.status_code}")
+                print(f"Unsupported URL scheme for {url}")
 
 if __name__ == "__main__":
     download_files_if_not_exist()
