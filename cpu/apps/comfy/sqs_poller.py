@@ -176,5 +176,5 @@ def poll_sqs_and_process_messages():
             print(f"SQS error: {e}")
 
 if __name__ == "__main__":
-    print(SQS_POLL_INTERVAL, SSM_MODELS_PARAMETER_NAME)
+    print(SSM_PARAMETER_NAME, SSM_MODELS_PARAMETER_NAME)
     poll_sqs_and_process_messages()
