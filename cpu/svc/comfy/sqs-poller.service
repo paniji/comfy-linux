@@ -6,7 +6,7 @@ After=network.target
 User=ec2-user
 Group=ec2-user
 WorkingDirectory=/home/ec2-user/comfy-linux
-ExecStart=/bin/bash -c 'source myenv/bin/activate; python cpu/apps/comfy/sqs_poller.py'
+ExecStart=/bin/bash -c 'source /etc/profile.d/sqs_params.sh; source myenv/bin/activate; python cpu/apps/comfy/sqs_poller.py'
 Restart=always
 
 [Install]
