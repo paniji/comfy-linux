@@ -11,7 +11,7 @@ SSM_MODELS_PARAMETER_NAME = os.environ.get('SSM_MODELS_PARAMETER_NAME')  # SSM P
 LOCAL_WEB_SERVER_URL = "http://localhost:8188/prompt"
 REGION_NAME = "us-east-1"  # AWS region
 SQS_POLL_INTERVAL = 2  # Default time in seconds to wait between polling SQS
-MAX_SQS_MESSAGES = 50  # Max messages to allow in SQS
+MAX_SQS_MESSAGES = int(os.environ.get('MAX_SQS_MESSAGES')) #50  # Max messages to allow in SQS
 
 def get_ssm_parameter(name):
     """Fetches the value of an SSM parameter."""
